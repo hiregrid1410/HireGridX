@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../app/theme/app_colors.dart';
-import '../app/theme/app_typography.dart';
 import '../features/learning/learning_shell_page.dart';
 
 // Import Feature Pages
@@ -9,20 +7,25 @@ import '../features/auth/splash_page.dart';
 import '../features/auth/login_page.dart';
 import '../features/auth/signup_page.dart';
 import '../features/auth/branch_onboarding_page.dart';
-import '../features/gateway/student_gateway_page.dart';
-import '../features/networking/networking_placeholder_page.dart';
 
 // Learning Sub-pages
-import '../features/learning/home/learning_home_page.dart';
+import '../features/dashboard/presentation/dashboard_page.dart';
 import '../features/learning/my_learning/my_learning_page.dart';
 import '../features/learning/company_exams/company_exams_page.dart';
 import '../features/learning/company_exams/company_detail_page.dart';
 import '../features/learning/placement/placement_mission_page.dart';
 import '../features/learning/plans/premium_plans_page.dart';
 import '../features/learning/plans/mock_purchase_page.dart';
+import '../features/learning/plans/purchase_page.dart';
 import '../features/learning/profile/student_profile_page.dart';
 import '../features/learning/profile/edit_profile_page.dart';
 import '../features/learning/profile/send_feedback_page.dart';
+import '../features/learning/profile/branch_switch_page.dart';
+import '../features/learning/noticeboard/notice_board_page.dart';
+import '../features/learning/hierarchy/subject_level_page.dart';
+import '../features/learning/hierarchy/topic_level_page.dart';
+import '../features/learning/hierarchy/module_detail_page.dart';
+import '../features/learning/leaderboard/leaderboard_page.dart';
 
 // Exam Engine
 import '../features/learning/exam/exam_rules_page.dart';
@@ -35,7 +38,7 @@ final GlobalKey<NavigatorState> _shellNavigatorKey = GlobalKey<NavigatorState>(d
 
 final GoRouter appRouter = GoRouter(
   navigatorKey: _rootNavigatorKey,
-  initialLocation: '/splash',
+  initialLocation: '/learning/home',
   routes: [
     GoRoute(
       path: '/splash',
@@ -53,14 +56,6 @@ final GoRouter appRouter = GoRouter(
       path: '/onboarding',
       builder: (context, state) => const BranchOnboardingPage(),
     ),
-    GoRoute(
-      path: '/gateway',
-      builder: (context, state) => const StudentGatewayPage(),
-    ),
-    GoRoute(
-      path: '/networking',
-      builder: (context, state) => const NetworkingPlaceholderPage(),
-    ),
 
     // Learning Shell Route
     ShellRoute(
@@ -71,7 +66,7 @@ final GoRouter appRouter = GoRouter(
       routes: [
         GoRoute(
           path: '/learning/home',
-          builder: (context, state) => const LearningHomePage(),
+          builder: (context, state) => const DashboardPage(),
         ),
         GoRoute(
           path: '/learning/my-learning',
@@ -80,6 +75,10 @@ final GoRouter appRouter = GoRouter(
         GoRoute(
           path: '/learning/company-exams',
           builder: (context, state) => const CompanyExamsPage(),
+        ),
+        GoRoute(
+          path: '/learning/noticeboard',
+          builder: (context, state) => const NoticeBoardPage(),
         ),
         GoRoute(
           path: '/learning/company/:id',
@@ -101,8 +100,42 @@ final GoRouter appRouter = GoRouter(
 
     // Independent Full-Screen Learning Overlays
     GoRoute(
+      path: '/learning/category/:id',
+      builder: (context, state) {
+        final id = state.pathParameters['id'] ?? 'cat_ee';
+        return SubjectLevelPage(categoryId: id);
+      },
+    ),
+    GoRoute(
+      path: '/learning/topic/:id',
+      builder: (context, state) {
+        final id = state.pathParameters['id'] ?? 'sub_ac';
+        return TopicLevelPage(subjectId: id);
+      },
+    ),
+    GoRoute(
+      path: '/learning/module/:id',
+      builder: (context, state) {
+        final id = state.pathParameters['id'] ?? 'mod_ac_01';
+        return ModuleDetailPage(moduleId: id);
+      },
+    ),
+    GoRoute(
+      path: '/learning/leaderboard',
+      builder: (context, state) => const LeaderboardPage(),
+    ),
+    GoRoute(
       path: '/learning/plans',
       builder: (context, state) => const PremiumPlansPage(),
+    ),
+    GoRoute(
+      path: '/learning/purchase',
+      builder: (context, state) {
+        final extra = state.extra as Map<String, dynamic>?;
+        final title = extra?['title'] as String? ?? 'Premium Pro Plan';
+        final price = extra?['price'] as String? ?? '₹1,499 / year';
+        return PurchasePage(planTitle: title, planPrice: price);
+      },
     ),
     GoRoute(
       path: '/learning/mock-purchase',
@@ -115,6 +148,10 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/learning/feedback',
       builder: (context, state) => const SendFeedbackPage(),
+    ),
+    GoRoute(
+      path: '/learning/branch-switch',
+      builder: (context, state) => const BranchSwitchPage(),
     ),
 
     // Exam Flow

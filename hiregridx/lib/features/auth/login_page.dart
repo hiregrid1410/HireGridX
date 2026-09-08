@@ -12,144 +12,237 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final _emailController = TextEditingController(text: 'student@hiregrid.com');
-  final _passwordController = TextEditingController(text: 'password123');
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
   bool _obscurePassword = true;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 32),
-              // Brand Logo
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: AppColors.primaryGreen.withOpacity(0.15),
-                      borderRadius: BorderRadius.circular(10),
+      backgroundColor: AppColors.backgroundDark,
+      body: AmbientGlowBackground(
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Column(
+              children: [
+                const Spacer(flex: 1),
+                // SkillSphere / HireGrid Logo Container
+                Column(
+                  children: [
+                    Container(
+                      width: 64,
+                      height: 64,
+                      decoration: BoxDecoration(
+                        color: Colors.transparent,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Container(
+                            width: 48,
+                            height: 48,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: AppColors.primaryGreen.withOpacity(0.4),
+                                  blurRadius: 24,
+                                  spreadRadius: 4,
+                                ),
+                              ],
+                            ),
+                          ),
+                          const Icon(
+                            Icons.eco_rounded,
+                            color: AppColors.primaryGreen,
+                            size: 42,
+                          ),
+                        ],
+                      ),
                     ),
-                    child: const Icon(Icons.eco, color: AppColors.primaryGreen, size: 24),
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    'HireGrid',
-                    style: AppTypography.cardTitle.copyWith(
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: 0.5,
+                    const SizedBox(height: 12),
+                    const Text(
+                      'SkillSphere',
+                      style: TextStyle(
+                        fontFamily: 'Inter',
+                        fontSize: 26,
+                        fontWeight: FontWeight.w800,
+                        color: AppColors.textPrimary,
+                        letterSpacing: -0.5,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 36),
-              const Text('Welcome Back', style: AppTypography.display),
-              const SizedBox(height: 8),
-              Text(
-                'Sign in to continue your learning & career journey.',
-                style: AppTypography.bodyMedium,
-              ),
-              const SizedBox(height: 32),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Learn. Connect. Grow.',
+                      style: TextStyle(
+                        fontFamily: 'Inter',
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.textMuted,
+                        letterSpacing: 0.2,
+                      ),
+                    ),
+                  ],
+                ),
+                const Spacer(flex: 1),
 
-              // Form fields
-              HgTextField(
-                labelText: 'Email or Student ID',
-                hintText: 'Enter your email',
-                controller: _emailController,
-                prefixIcon: Icons.email_outlined,
-              ),
-              const SizedBox(height: 16),
-              HgTextField(
-                labelText: 'Password',
-                hintText: 'Enter your password',
-                controller: _passwordController,
-                obscureText: _obscurePassword,
-                prefixIcon: Icons.lock_outline,
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                // Welcome Back Header
+                const Text(
+                  'Welcome Back',
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 22,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  'Sign in to continue your journey',
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 13,
                     color: AppColors.textMuted,
-                    size: 20,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _obscurePassword = !_obscurePassword;
-                    });
-                  },
-                ),
-              ),
-              const SizedBox(height: 12),
-
-              Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: () {},
-                  child: Text(
-                    'Forgot Password?',
-                    style: AppTypography.caption.copyWith(color: AppColors.accentBlue),
                   ),
                 ),
-              ),
-              const SizedBox(height: 24),
+                const SizedBox(height: 32),
 
-              HgPrimaryButton(
-                text: 'Sign In',
-                onPressed: () {
-                  context.go('/gateway');
-                },
-              ),
-              const SizedBox(height: 24),
-
-              Row(
-                children: [
-                  const Expanded(child: Divider(color: AppColors.border)),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Text('Or continue with', style: AppTypography.caption),
-                  ),
-                  const Expanded(child: Divider(color: AppColors.border)),
-                ],
-              ),
-              const SizedBox(height: 24),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  IconButton(
-                    style: IconButton.styleFrom(
-                      backgroundColor: AppColors.surface,
-                      padding: const EdgeInsets.all(12),
+                // Input fields
+                HgTextField(
+                  hintText: 'Email or Student ID',
+                  controller: _emailController,
+                  prefixIcon: Icons.mail_outline_rounded,
+                ),
+                const SizedBox(height: 14),
+                HgTextField(
+                  hintText: 'Password',
+                  controller: _passwordController,
+                  obscureText: _obscurePassword,
+                  prefixIcon: Icons.lock_outline_rounded,
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _obscurePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                      color: AppColors.textMuted,
+                      size: 20,
                     ),
-                    icon: const Icon(Icons.g_mobiledata, color: AppColors.textPrimary, size: 28),
-                    onPressed: () => context.go('/gateway'),
+                    onPressed: () {
+                      setState(() {
+                        _obscurePassword = !_obscurePassword;
+                      });
+                    },
                   ),
-                ],
-              ),
-              const SizedBox(height: 32),
+                ),
+                const SizedBox(height: 12),
 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("Don't have an account?", style: AppTypography.bodyMedium),
-                  TextButton(
-                    onPressed: () => context.go('/signup'),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: GestureDetector(
+                    onTap: () {},
                     child: Text(
-                      'Sign Up',
-                      style: AppTypography.bodyMedium.copyWith(
-                        color: AppColors.primaryGreen,
-                        fontWeight: FontWeight.w700,
+                      'Forgot Password?',
+                      style: TextStyle(
+                        fontFamily: 'Inter',
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.accentBlue,
                       ),
                     ),
                   ),
-                ],
-              ),
-            ],
+                ),
+                const SizedBox(height: 24),
+
+                // Sign In Primary Button
+                HgPrimaryButton(
+                  text: 'Sign In',
+                  onPressed: () {
+                    context.go('/gateway');
+                  },
+                ),
+                const SizedBox(height: 28),
+
+                // Divider Or continue with
+                Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        height: 1,
+                        color: const Color(0x1AFFFFFF),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(
+                        'Or continue with',
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 12,
+                          color: AppColors.textMuted,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        height: 1,
+                        color: const Color(0x1AFFFFFF),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
+
+                // Social Circular Buttons
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 48,
+                      height: 48,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF0D1720),
+                        shape: BoxShape.circle,
+                        border: Border.all(color: const Color(0x1AFFFFFF)),
+                      ),
+                      child: const Icon(
+                        Icons.g_mobiledata_rounded,
+                        color: AppColors.textPrimary,
+                        size: 30,
+                      ),
+                    ),
+                  ],
+                ),
+                const Spacer(flex: 2),
+
+                // Bottom Switch
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Don't have an account? ",
+                      style: TextStyle(
+                        fontFamily: 'Inter',
+                        fontSize: 13,
+                        color: AppColors.textMuted,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => context.go('/signup'),
+                      child: const Text(
+                        'Sign Up',
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 13,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.primaryGreen,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+              ],
+            ),
           ),
         ),
       ),

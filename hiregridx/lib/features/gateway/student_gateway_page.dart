@@ -5,244 +5,362 @@ import '../../app/theme/app_typography.dart';
 import '../../core/widgets/common_widgets.dart';
 import '../../shared/mock_data/mock_repository.dart';
 
-class StudentGatewayPage extends StatelessWidget {
+class StudentGatewayPage extends StatefulWidget {
   const StudentGatewayPage({super.key});
+
+  @override
+  State<StudentGatewayPage> createState() => _StudentGatewayPageState();
+}
+
+class _StudentGatewayPageState extends State<StudentGatewayPage> {
+  String _selectedSegment = 'Learning';
 
   @override
   Widget build(BuildContext context) {
     final user = MockRepository.currentUser;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.backgroundDark,
       body: SafeArea(
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header
+              // Header Row
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  Row(
                     children: [
-                      Text(
-                        'Good Morning,',
-                        style: AppTypography.caption.copyWith(color: AppColors.textMuted),
+                      IconButton(
+                        icon: const Icon(Icons.notes_rounded, color: AppColors.textPrimary, size: 26),
+                        onPressed: () {},
                       ),
-                      const SizedBox(height: 2),
-                      Row(
+                      const SizedBox(width: 4),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            user.name,
-                            style: AppTypography.pageTitle,
+                            'Good Morning,',
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontSize: 13,
+                              color: AppColors.textMuted,
+                            ),
                           ),
-                          const SizedBox(width: 6),
-                          const Text('👋', style: TextStyle(fontSize: 20)),
+                          const SizedBox(height: 2),
+                          Row(
+                            children: [
+                              Text(
+                                user.name.split(' ').first,
+                                style: const TextStyle(
+                                  fontFamily: 'Inter',
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w700,
+                                  color: AppColors.textPrimary,
+                                ),
+                              ),
+                              const SizedBox(width: 4),
+                              const Text('👋', style: TextStyle(fontSize: 18)),
+                            ],
+                          ),
                         ],
                       ),
                     ],
                   ),
                   Row(
                     children: [
-                      IconButton(
-                        icon: const Icon(Icons.notifications_none_rounded, color: AppColors.textSecondary),
-                        onPressed: () {},
-                      ),
-                      const SizedBox(width: 4),
-                      CircleAvatar(
-                        radius: 20,
-                        backgroundColor: AppColors.primaryGreen.withOpacity(0.2),
-                        child: const Text('KS', style: TextStyle(color: AppColors.primaryGreen, fontWeight: FontWeight.bold)),
+                      const Icon(Icons.notifications_none_rounded, color: AppColors.textPrimary, size: 24),
+                      const SizedBox(width: 8),
+                      Stack(
+                        children: [
+                          CircleAvatar(
+                            radius: 20,
+                            backgroundColor: const Color(0xFF1B2A38),
+                            child: Text(
+                              user.name.split(' ').map((e) => e[0]).take(2).join(),
+                              style: const TextStyle(
+                                color: AppColors.textPrimary,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            right: 0,
+                            bottom: 0,
+                            child: Container(
+                              width: 10,
+                              height: 10,
+                              decoration: BoxDecoration(
+                                color: AppColors.primaryGreen,
+                                shape: BoxShape.circle,
+                                border: Border.all(color: AppColors.backgroundDark, width: 1.5),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ],
               ),
-              const SizedBox(height: 28),
-
-              Text(
-                'Where do you want to go?',
-                style: AppTypography.sectionHeader.copyWith(fontSize: 20),
+              const SizedBox(height: 4),
+              Padding(
+                padding: const EdgeInsets.only(left: 48),
+                child: Text(
+                  'Keep learning. Keep growing.',
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 12,
+                    color: AppColors.textMuted,
+                  ),
+                ),
               ),
-              const SizedBox(height: 6),
-              Text(
-                'Select a workspace to start working.',
-                style: AppTypography.bodyMedium,
-              ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 20),
 
-              // Phase Cards
-              Expanded(
-                child: Column(
+              // Segmented Switch [ Learning | Networking ]
+              HgSegmentedSwitch(
+                selectedSegment: _selectedSegment,
+                onChanged: (val) {
+                  setState(() {
+                    _selectedSegment = val;
+                  });
+                  if (val == 'Networking') {
+                    context.go('/networking');
+                  }
+                },
+              ),
+              const SizedBox(height: 20),
+
+              // Progress Card & Streak Card Row
+              Row(
+                children: [
+                  // My Progress Card
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF0D1720),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: const Color(0x14FFFFFF)),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'My Progress',
+                                style: TextStyle(
+                                  fontFamily: 'Inter',
+                                  fontSize: 11,
+                                  color: AppColors.textMuted,
+                                ),
+                              ),
+                              const SizedBox(height: 6),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.baseline,
+                                textBaseline: TextBaseline.alphabetic,
+                                children: [
+                                  const Text(
+                                    '65',
+                                    style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.w800,
+                                      color: AppColors.textPrimary,
+                                    ),
+                                  ),
+                                  Text(
+                                    '%',
+                                    style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColors.textMuted,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            width: 38,
+                            height: 38,
+                            child: CircularProgressIndicator(
+                              value: 0.65,
+                              strokeWidth: 4,
+                              backgroundColor: const Color(0xFF162534),
+                              color: AppColors.primaryGreen,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+
+                  // Streak Card
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF0D1720),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: const Color(0x14FFFFFF)),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Streak',
+                                style: TextStyle(
+                                  fontFamily: 'Inter',
+                                  fontSize: 11,
+                                  color: AppColors.textMuted,
+                                ),
+                              ),
+                              const SizedBox(height: 6),
+                              Row(
+                                children: [
+                                  Text(
+                                    '${user.streak} ',
+                                    style: const TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.w800,
+                                      color: AppColors.textPrimary,
+                                    ),
+                                  ),
+                                  Text(
+                                    'days',
+                                    style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 13,
+                                      color: AppColors.textMuted,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          const Text('🔥', style: TextStyle(fontSize: 26)),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+
+              // Quote Card with Sparkles ✨
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF0D1720),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: const Color(0x14FFFFFF)),
+                ),
+                child: Row(
                   children: [
-                    // NETWORKING CARD
+                    const Icon(Icons.auto_awesome, color: Color(0xFFFF7BBF), size: 16),
+                    const SizedBox(width: 10),
                     Expanded(
-                      child: HgCard(
-                        onTap: () => context.go('/networking'),
-                        backgroundColor: const Color(0xFF0F1B2A),
-                        border: Border.all(color: AppColors.accentBlue.withOpacity(0.4), width: 1.5),
-                        padding: const EdgeInsets.all(20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.all(12),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.accentBlue.withOpacity(0.15),
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: const Icon(Icons.people_outline, color: AppColors.accentBlue, size: 28),
-                                ),
-                                const HgBadge(
-                                  label: 'NETWORKING',
-                                  color: Color(0x332094FF),
-                                  textColor: AppColors.accentBlue,
-                                ),
-                              ],
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Networking',
-                                  style: AppTypography.display.copyWith(fontSize: 24),
-                                ),
-                                const SizedBox(height: 6),
-                                Text(
-                                  'Connect. Build. Grow.',
-                                  style: AppTypography.bodyMedium.copyWith(color: AppColors.textSecondary),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  'Connections • Opportunities • Community',
-                                  style: AppTypography.caption,
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Enter Networking',
-                                  style: AppTypography.button.copyWith(color: AppColors.accentBlue),
-                                ),
-                                const Icon(Icons.arrow_forward_rounded, color: AppColors.accentBlue),
-                              ],
-                            ),
-                          ],
+                      child: Text(
+                        '"Small steps every day lead to big results."',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 13,
+                          fontStyle: FontStyle.italic,
+                          color: AppColors.textSecondary,
                         ),
                       ),
                     ),
-                    const SizedBox(height: 16),
-
-                    // LEARNING CARD
-                    Expanded(
-                      child: HgCard(
-                        onTap: () => context.go('/learning/home'),
-                        backgroundColor: const Color(0xFF0D1D16),
-                        border: Border.all(color: AppColors.primaryGreen.withOpacity(0.5), width: 1.5),
-                        padding: const EdgeInsets.all(20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.all(12),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.primaryGreen.withOpacity(0.15),
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: const Icon(Icons.menu_book_rounded, color: AppColors.primaryGreen, size: 28),
-                                ),
-                                const HgBadge(
-                                  label: 'LEARNING',
-                                  color: Color(0x3322E573),
-                                  textColor: AppColors.primaryGreen,
-                                ),
-                              ],
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Learning',
-                                  style: AppTypography.display.copyWith(fontSize: 24),
-                                ),
-                                const SizedBox(height: 6),
-                                Text(
-                                  'Learn. Practice. Get Placed.',
-                                  style: AppTypography.bodyMedium.copyWith(color: AppColors.textSecondary),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  'Courses • Exams • Placement Missions',
-                                  style: AppTypography.caption,
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Enter Learning',
-                                  style: AppTypography.button.copyWith(color: AppColors.primaryGreen),
-                                ),
-                                const Icon(Icons.arrow_forward_rounded, color: AppColors.primaryGreen),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                    const SizedBox(width: 10),
+                    const Icon(Icons.auto_awesome, color: AppColors.accentYellow, size: 16),
                   ],
                 ),
               ),
+              const SizedBox(height: 24),
 
-              const SizedBox(height: 20),
+              // Quick Action / Start Learning Callout
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Quick Gateway',
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () => context.go('/learning/home'),
+                    child: const Text(
+                      'View All',
+                      style: TextStyle(
+                        fontFamily: 'Inter',
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.primaryGreen,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 14),
 
-              // Bottom Quick Telemetry Bar
-              Container(
-                padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(
-                  color: AppColors.surface,
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: AppColors.border),
-                ),
+              // Enterprise learning gateway tile
+              HgCard(
+                onTap: () => context.go('/learning/home'),
+                padding: const EdgeInsets.all(18),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Row(
-                      children: [
-                        const Text('🔥', style: TextStyle(fontSize: 16)),
-                        const SizedBox(width: 6),
-                        Text('${user.streak} Day Streak', style: AppTypography.caption.copyWith(fontWeight: FontWeight.w600)),
-                      ],
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryGreen.withOpacity(0.12),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Icon(Icons.local_library_rounded, color: AppColors.primaryGreen, size: 24),
                     ),
-                    Container(width: 1, height: 16, color: AppColors.border),
-                    Row(
-                      children: [
-                        const Icon(Icons.stars_rounded, color: AppColors.accentYellow, size: 18),
-                        const SizedBox(width: 6),
-                        Text('${user.xp} XP', style: AppTypography.caption.copyWith(fontWeight: FontWeight.w600)),
-                      ],
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Continue Learning Workspace',
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontSize: 15,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.textPrimary,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Access subjects, exams & placement modules',
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontSize: 12,
+                              color: AppColors.textMuted,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    Container(width: 1, height: 16, color: AppColors.border),
-                    Row(
-                      children: [
-                        const Icon(Icons.military_tech_rounded, color: AppColors.accentYellow, size: 18),
-                        const SizedBox(width: 6),
-                        Text(user.rankBadge, style: AppTypography.caption.copyWith(fontWeight: FontWeight.w600, color: AppColors.accentYellow)),
-                      ],
-                    ),
+                    const Icon(Icons.arrow_forward_ios_rounded, color: AppColors.textMuted, size: 16),
                   ],
                 ),
               ),

@@ -24,32 +24,37 @@ class HgPrimaryButton extends StatelessWidget {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primaryGreen,
-          foregroundColor: AppColors.backgroundDark,
+          foregroundColor: const Color(0xFF02080D),
           elevation: 0,
+          shadowColor: Colors.transparent,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(16),
           ),
         ),
         onPressed: isLoading ? null : onPressed,
         child: isLoading
             ? const SizedBox(
-                height: 20,
-                width: 20,
+                height: 22,
+                width: 22,
                 child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  color: AppColors.backgroundDark,
+                  strokeWidth: 2.5,
+                  color: Color(0xFF02080D),
                 ),
               )
             : Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   if (icon != null) ...[
-                    Icon(icon, size: 20, color: AppColors.backgroundDark),
+                    Icon(icon, size: 20, color: const Color(0xFF02080D)),
                     const SizedBox(width: 8),
                   ],
                   Text(
                     text,
-                    style: AppTypography.button.copyWith(color: AppColors.backgroundDark),
+                    style: AppTypography.button.copyWith(
+                      color: const Color(0xFF02080D),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ],
               ),
@@ -79,9 +84,9 @@ class HgSecondaryButton extends StatelessWidget {
         style: OutlinedButton.styleFrom(
           backgroundColor: AppColors.surface,
           foregroundColor: AppColors.textPrimary,
-          side: const BorderSide(color: AppColors.borderBright),
+          side: const BorderSide(color: AppColors.border),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(16),
           ),
         ),
         onPressed: onPressed,
@@ -136,30 +141,32 @@ class HgTextField extends StatelessWidget {
               fontWeight: FontWeight.w600,
             ),
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 8),
         ],
-        TextField(
-          controller: controller,
-          obscureText: obscureText,
-          keyboardType: keyboardType,
-          style: AppTypography.bodyLarge,
-          decoration: InputDecoration(
-            hintText: hintText,
-            hintStyle: AppTypography.bodyMedium.copyWith(color: AppColors.textMuted),
-            prefixIcon: prefixIcon != null
-                ? Icon(prefixIcon, size: 20, color: AppColors.textMuted)
-                : null,
-            suffixIcon: suffixIcon,
-            filled: true,
-            fillColor: AppColors.surface,
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: AppColors.border),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: AppColors.primaryGreen, width: 1.5),
+        Container(
+          height: 52,
+          decoration: BoxDecoration(
+            color: const Color(0xFF0D1720),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: const Color(0x1AFFFFFF)),
+          ),
+          child: TextField(
+            controller: controller,
+            obscureText: obscureText,
+            keyboardType: keyboardType,
+            style: AppTypography.bodyLarge.copyWith(color: AppColors.textPrimary),
+            decoration: InputDecoration(
+              hintText: hintText,
+              hintStyle: AppTypography.bodyMedium.copyWith(
+                color: const Color(0xFF6E7B85),
+                fontSize: 14,
+              ),
+              prefixIcon: prefixIcon != null
+                  ? Icon(prefixIcon, size: 20, color: const Color(0xFF6E7B85))
+                  : null,
+              suffixIcon: suffixIcon,
+              border: InputBorder.none,
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
             ),
           ),
         ),
@@ -173,6 +180,7 @@ class HgCard extends StatelessWidget {
   final EdgeInsetsGeometry padding;
   final Color? backgroundColor;
   final Border? border;
+  final double borderRadius;
   final VoidCallback? onTap;
 
   const HgCard({
@@ -181,29 +189,107 @@ class HgCard extends StatelessWidget {
     this.padding = const EdgeInsets.all(16),
     this.backgroundColor,
     this.border,
+    this.borderRadius = 16.0,
     this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    Widget cardContent = Container(
-      padding: padding,
-      decoration: BoxDecoration(
-        color: backgroundColor ?? AppColors.surface,
-        borderRadius: BorderRadius.circular(16),
-        border: border ?? Border.all(color: AppColors.border),
+    Widget cardContent = Material(
+      color: Colors.transparent,
+      child: Container(
+        padding: padding,
+        decoration: BoxDecoration(
+          color: backgroundColor ?? AppColors.surface,
+          borderRadius: BorderRadius.circular(borderRadius),
+          border: border ?? Border.all(color: AppColors.border),
+        ),
+        child: child,
       ),
-      child: child,
     );
 
     if (onTap != null) {
       return InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(borderRadius),
         child: cardContent,
       );
     }
     return cardContent;
+  }
+}
+
+class HgSegmentedSwitch extends StatelessWidget {
+  final String selectedSegment; // 'Learning' or 'Networking'
+  final ValueChanged<String> onChanged;
+
+  const HgSegmentedSwitch({
+    super.key,
+    required this.selectedSegment,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final bool isLearning = selectedSegment == 'Learning';
+
+    return Container(
+      height: 48,
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: const Color(0xFF09131C),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: const Color(0x1AFFFFFF)),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: GestureDetector(
+              onTap: () => onChanged('Learning'),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                decoration: BoxDecoration(
+                  color: isLearning ? AppColors.primaryGreen : Colors.transparent,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                alignment: Alignment.center,
+                child: Text(
+                  'Learning',
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: isLearning ? const Color(0xFF02080D) : AppColors.textPrimary,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: GestureDetector(
+              onTap: () => onChanged('Networking'),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                decoration: BoxDecoration(
+                  color: !isLearning ? AppColors.primaryGreen : Colors.transparent,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                alignment: Alignment.center,
+                child: Text(
+                  'Networking',
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: !isLearning ? const Color(0xFF02080D) : AppColors.textPrimary,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -252,20 +338,20 @@ class HgAccessBadge extends StatelessWidget {
     switch (type.toUpperCase()) {
       case 'FREE':
       case 'DEMO':
-        bg = AppColors.badgeFree.withOpacity(0.15);
-        text = AppColors.badgeFree;
+        bg = AppColors.accentBlue.withValues(alpha: 0.15);
+        text = AppColors.accentBlue;
         icon = Icons.bolt;
         break;
       case 'PREMIUM':
       case 'PAID':
-        bg = AppColors.badgePremium.withOpacity(0.15);
-        text = AppColors.badgePremium;
+        bg = AppColors.accentYellow.withValues(alpha: 0.15);
+        text = AppColors.accentYellow;
         icon = Icons.lock_outline;
         break;
       case 'UNLOCKED':
       default:
-        bg = AppColors.badgeUnlocked.withOpacity(0.15);
-        text = AppColors.badgeUnlocked;
+        bg = AppColors.primaryGreen.withValues(alpha: 0.15);
+        text = AppColors.primaryGreen;
         icon = Icons.check_circle_outline;
         break;
     }
@@ -330,6 +416,32 @@ class HgStatCard extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class AmbientGlowBackground extends StatelessWidget {
+  final Widget child;
+
+  const AmbientGlowBackground({super.key, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        color: AppColors.backgroundDark,
+        gradient: RadialGradient(
+          center: Alignment(0.4, -0.7),
+          radius: 1.1,
+          colors: [
+            Color(0x2216E6A3), // Subtle Cyan/Green glow top right
+            Color(0x11149CFF), // Subtle Blue glow top left
+            Color(0xFF03090E), // Canvas bottom background
+          ],
+          stops: [0.0, 0.45, 1.0],
+        ),
+      ),
+      child: child,
     );
   }
 }
